@@ -11,11 +11,16 @@ namespace WebAppTodo.Core
         /// All TodoItems that are associated with this label
         /// </ summary >
         public List<TodoItem> LabelTodoItems { get; set; }
+
         public TodoItemLabel(string value)
         {
             Id = Guid.NewGuid();
             Value = value;
             LabelTodoItems = new List<TodoItem>();
+        }
+
+        public TodoItemLabel()
+        {
         }
     }
 }

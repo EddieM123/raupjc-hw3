@@ -39,6 +39,8 @@ namespace WebAppTodo.Core
         /// <param name =" todoItem " > Todo item </ param >
         /// <param name =" userId " >Id of the user that is trying to update the data</ param >
         void Update (TodoItem todoItem, Guid userId) ;
+        
+
         /// <summary >
         /// Tries to mark a TodoItem as completed in database . Throw TodoAccessDeniedException with appropriate message if user is not
         /// the owner of the Todo item
@@ -63,6 +65,10 @@ namespace WebAppTodo.Core
         /// Gets all TodoItem objects in database for user that apply to the filter
         /// </ summary >
         List<TodoItem> GetFiltered (Func<TodoItem, bool> filterFunction, Guid userId);
+        /// <summary >
+        /// Checks if label exists.
+        /// </ summary >
+        bool LabelExists(string labelText);
     }
 
 }

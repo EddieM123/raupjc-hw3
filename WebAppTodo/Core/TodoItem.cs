@@ -25,7 +25,12 @@ namespace WebAppTodo.Core
         /// </ summary >
         public DateTime? DateDue { get; set; }
 
-
+        public TodoItem(String text, DateTime? datedue, Guid id)
+        {
+            this.Text = text;
+            this.DateDue = DateDue;
+            this.Id = id;
+        }
 
         // Shorter syntax for single line getters in C#6
         // public bool IsCompleted = > DateCompleted . HasValue ;

@@ -1,22 +1,22 @@
 ﻿@page
-@model Models.IndexViewModel
-@{
-    ViewData["Title"] = "Active Todos";
-}
-
-<button id="showHideButton" class="btn btn-default pointer"  margin-top:200px>Add Item</button>
+@model WebAppTodo.Models.Todo.IndexViewModel
 
 
-@{
-    ViewData["Title"] = "Active Todos";
-}
-<h3>@ViewData["Title"]</h3>
+<a asp-action="Add">
+    <div id="prvi">
+        <h4>
+            <span class="glyphicon glyphicon-plus-sign"></span> Add Item
+
+        </h4>
+    </div>
+</a>
+
 
 <ul class="todoList">
     @foreach (var item in @Model.TodoViewModels)
     {
         <li>
-            @Html.Partial("_TodoItemPartial", item)
+            <h5>@item.Text</h5>
         </li>
     }
 </ul>

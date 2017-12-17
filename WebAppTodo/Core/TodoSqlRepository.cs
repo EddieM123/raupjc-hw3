@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,11 @@ namespace WebAppTodo.Core
             _context = context;
         }
 
+
+        public bool LabelExists(String text)
+        {
+            return false;
+        }
         /// <summary >
         /// Gets TodoItem for a given id. Throw TodoAccessDeniedException with appropriate message if user is not the owner of the Todo item
         /// </ summary >
@@ -150,8 +156,7 @@ namespace WebAppTodo.Core
             return _context.TodoItems.Where(s => s.UserId == userId).Include(s => s.Labels).Where(filterFunction).OrderByDescending(s => s.DateCreated).ToList();
         }
 
-
-
+        
 
         [Serializable]
         class DulpicateItemException : Exception

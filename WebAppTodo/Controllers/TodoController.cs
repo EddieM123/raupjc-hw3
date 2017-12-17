@@ -26,7 +26,7 @@ namespace WebAppTodo.Controllers
 
 
 
-        // GET: /<controller>/
+        // GET: /todo/
         public async Task<IActionResult> Index()
         {
             var todo = _repository.GetActive(new Guid((await _userManager.GetUserAsync(HttpContext.User)).Id));
@@ -40,7 +40,28 @@ namespace WebAppTodo.Controllers
             return View(viewModel);
         }
 
-        
+        // GET: /todo/Add
+        public IActionResult Add()
+        {
+            return View(new AddTodoViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(AddTodoViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var todoItem = new TodoItem(model.Text, model.DateDue, new Guid((await _userManager.GetUserAsync(HttpContext.User)).Id));
+                
+                _repository.Add(todoItem);
+                return RedirectToAction("Index");
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+
 
 
     }
