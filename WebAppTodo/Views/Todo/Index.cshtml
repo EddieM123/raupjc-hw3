@@ -6,17 +6,22 @@
     <div id="prvi">
         <h4>
             <span class="glyphicon glyphicon-plus-sign"></span> Add Item
-
         </h4>
     </div>
 </a>
 
 
 <ul class="todoList">
-    @foreach (var item in @Model.TodoViewModels)
-    {
-        <li>
-            <h5>@item.Text</h5>
-        </li>
+    
+    @if (!(Model.TodoViewModels is null)) {
+        <h1>Empty</h1>
+    }
+    else { 
+        foreach (var item in @Model.TodoViewModels)
+        {
+            < li >
+                < h5 > @item.Text </ h5 >
+            </ li >
+        }
     }
 </ul>
