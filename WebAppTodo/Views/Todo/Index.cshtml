@@ -1,27 +1,21 @@
-﻿@page
-@model WebAppTodo.Models.Todo.IndexViewModel
+﻿@model WebAppTodo.Models.Todo.IndexViewModel
 
+@{
+    ViewData["Title"] = "Todos";
+}
 
-<a asp-action="Add">
-    <div id="prvi">
-        <h4>
-            <span class="glyphicon glyphicon-plus-sign"></span> Add Item
-        </h4>
-    </div>
-</a>
+<h2>@ViewData["Title"]</h2>
 
-
-<ul class="todoList">
-    
-    @if (!(Model.TodoViewModels is null)) {
-        <h1>Empty</h1>
+<a asp-action="Add">Add new todo</a> &emsp; <a asp-action="Completed">See completed todos</a>
+<br />
+<br />
+<br/>
+<div>
+    @foreach (var item in Model.TodoViewModels)
+    {
+        @Html.Partial("_TodoPartial", item)
+        <hr />
     }
-    else { 
-        foreach (var item in @Model.TodoViewModels)
-        {
-            < li >
-                < h5 > @item.Text </ h5 >
-            </ li >
-        }
-    }
-</ul>
+</div>
+
+

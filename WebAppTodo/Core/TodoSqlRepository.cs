@@ -11,16 +11,28 @@ namespace WebAppTodo.Core
     class TodoSqlRepository : ITodoRepository
     {
         private readonly TodoDbContext _context;
+
         public TodoSqlRepository(TodoDbContext context)
         {
             _context = context;
         }
 
 
-        public bool LabelExists(String text)
+        public TodoItemLabel LabelExists(TodoItemLabel tl)
         {
-            return false;
+            TodoItemLabel curr = _context.TodoItemLabels.Where(t => t.Value == tl.Value).FirstOrDefault();
+            if (curr == null)
+            {
+                _context.TodoItemLabels.Add(tl);
+                _context.SaveChanges();
+                return tl;
+            }
+            else
+            {
+                return curr;
+            }
         }
+
         /// <summary >
         /// Gets TodoItem for a given id. Throw TodoAccessDeniedException with appropriate message if user is not the owner of the Todo item
         /// </ summary >
@@ -31,7 +43,7 @@ namespace WebAppTodo.Core
         {
             TodoItem todoItem = _context.TodoItems.Where(x => x.Id == todoId).First();
             if (todoItem is null) return null;
-            if (todoItem.UserId != userId) throw new TodoAccessDeniedException();
+            if (todoItem.UserId != userId) throw new TodoAccessDeniedException("Access Denied!");
 
             return todoItem;
         }
@@ -47,11 +59,11 @@ namespace WebAppTodo.Core
             if(td is null)
             {
                 _context.TodoItems.Add(todoItem);
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
             else
             {
-                throw new DulpicateItemException(todoItem.Id);
+                throw new DulpicateItemException("Duplicate id: {0}", todoItem.Id);
             }
 
         }
@@ -70,7 +82,7 @@ namespace WebAppTodo.Core
             if (td is null) return false;
             if(td.UserId != userId)
             {
-                throw new TodoAccessDeniedException();
+                throw new TodoAccessDeniedException("Ids not matching!");
             }
             else
             {
@@ -84,7 +96,6 @@ namespace WebAppTodo.Core
         /// Updates given TodoItem in database .
         /// If TodoItem does not exist , method will add one . Throw TodoAccessDeniedException with appropriate message if user is not
         /// the owner of the Todo item
-
         /// </ summary >
         /// <param name =" todoItem " > Todo item </ param >
         /// <param name =" userId " >Id of the user that is trying to update the data</ param >
@@ -96,11 +107,12 @@ namespace WebAppTodo.Core
                 td.Text = todoItem.Text;
                 td.Labels = todoItem.Labels;
                 td.DateDue = todoItem.DateDue;
-                _context.SaveChangesAsync();
+                td.DateCompleted = todoItem.DateCompleted;
+                _context.SaveChanges();
             }
             else
             {
-                throw new TodoAccessDeniedException();
+                throw new TodoAccessDeniedException("User is not the owner of the Todo item!");
             }
         }
 
@@ -115,37 +127,36 @@ namespace WebAppTodo.Core
         {
             TodoItem td = _context.TodoItems.Where(s => s.Id == todoId).FirstOrDefault();
             if (td is null) return false;
-            if (td.UserId != userId) throw new TodoAccessDeniedException();
+            if (td.UserId != userId) throw new TodoAccessDeniedException("User is not the owner of the Todo item!");
 
             bool ret = td.MarkAsCompleted();
-
             
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             return ret;
         }
 
         /// <summary >
         /// Gets all TodoItem objects in database for user , sorted by date created(descending )
         /// </ summary >
-        public List<TodoItem> GetAll(Guid userId)
+        public async Task<List<TodoItem>> GetAll(Guid userId)
         {
-            return  _context.TodoItems.Where(s => s.UserId == userId).Include(s => s.Labels).OrderByDescending(s => s.DateCreated).ToList();
+            return  await _context.TodoItems.Where(s => s.UserId == userId).Include(s => s.Labels).OrderByDescending(s => s.DateCreated).ToListAsync();
         }
 
         /// <summary >
         /// Gets all incomplete TodoItem objects in database for user
         /// </ summary >
-        public List<TodoItem> GetActive(Guid userId)
+        public async Task<List<TodoItem>> GetActive(Guid userId)
         {
-            return _context.TodoItems.Where(s => s.UserId == userId && !s.DateCompleted.HasValue).Include(s => s.Labels).OrderByDescending(s => s.DateCreated).ToList();
+            return await _context.TodoItems.Where(s => s.UserId == userId && !s.DateCompleted.HasValue).Include(s => s.Labels).OrderByDescending(s => s.DateCreated).ToListAsync();
         }
 
         /// <summary >
         /// Gets all completed TodoItem objects in database for user
         /// </ summary >
-        public List<TodoItem> GetCompleted(Guid userId)
+        public async Task<List<TodoItem>> GetCompleted(Guid userId)
         {
-            return _context.TodoItems.Where(s => s.UserId == userId && s.DateCompleted.HasValue).Include(s => s.Labels).OrderByDescending(s => s.DateCreated).ToList();
+            return await _context.TodoItems.Where(s => s.UserId == userId && s.DateCompleted.HasValue).Include(s => s.Labels).OrderByDescending(s => s.DateCreated).ToListAsync();
         }
 
         /// <summary >
@@ -161,7 +172,7 @@ namespace WebAppTodo.Core
         [Serializable]
         class DulpicateItemException : Exception
         {
-            public DulpicateItemException(Guid id) : base(String.Format("Duplicate id: {0}", id))
+            public DulpicateItemException(string v, Guid id) : base(String.Format("Duplicate id: {0}", id))
             {
 
             }
@@ -171,7 +182,7 @@ namespace WebAppTodo.Core
         [Serializable]
         class TodoAccessDeniedException : Exception
         {
-            public TodoAccessDeniedException() : base(String.Format("The given ID does not match the id of the owner!"))
+            public TodoAccessDeniedException(string v) : base(String.Format("The given ID does not match the id of the owner!"))
             {
 
             }

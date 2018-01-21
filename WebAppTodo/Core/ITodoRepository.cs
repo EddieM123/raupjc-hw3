@@ -49,18 +49,20 @@ namespace WebAppTodo.Core
         /// <param name =" userId " >Id of the user that is trying to mark as completed</ param >
         /// <returns > True if success , false otherwise </ returns >
         bool MarkAsCompleted(Guid todoId, Guid userId);
-        /// <summary >
-        /// Gets all TodoItem objects in database for user , sorted by date created(descending )
-        /// </ summary >
-        List<TodoItem> GetAll(Guid userId);
-        /// <summary >
-        /// Gets all incomplete TodoItem objects in database for user
-        /// </ summary >
-        List<TodoItem> GetActive(Guid userId);
-        /// <summary >
-        /// Gets all completed TodoItem objects in database for user
-        /// </ summary >
-        List<TodoItem> GetCompleted(Guid userId);
+        /// <summary>
+        ///     Gets all TodoItem objects in database for user , sorted by date created(descending )
+        /// </summary>
+        Task<List<TodoItem>> GetAll(Guid userId);
+
+        /// <summary>
+        ///     Gets all incomplete TodoItem objects in database for user
+        /// </summary>
+        Task<List<TodoItem>> GetActive(Guid userId);
+
+        /// <summary>
+        ///     Gets all completed TodoItem objects in database for user
+        /// </summary>
+        Task<List<TodoItem>> GetCompleted(Guid userId);
         /// <summary >
         /// Gets all TodoItem objects in database for user that apply to the filter
         /// </ summary >
@@ -68,7 +70,7 @@ namespace WebAppTodo.Core
         /// <summary >
         /// Checks if label exists.
         /// </ summary >
-        bool LabelExists(string labelText);
+        TodoItemLabel LabelExists(TodoItemLabel tditl);
     }
 
 }

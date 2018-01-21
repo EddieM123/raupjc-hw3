@@ -1,7 +1,19 @@
-﻿
+﻿@model WebAppTodo.Models.Todo.CompletedViewModel
+
 @{
-    ViewData["Title"] = "Completed";
+    ViewData["Title"] = "Completed todos";
 }
 
-<h2>Completed</h2>
+<h2>@ViewData["Title"]</h2>
 
+<a asp-action="Add">Add new todo</a> &emsp; <a asp-action="Index">See active todos</a>
+<br />
+<br />
+<br/>
+<div>
+    @foreach (var item in Model.TodoViewModels)
+    {
+        @Html.Partial("_TodoPartial", item)
+        <hr />
+    }
+</div>

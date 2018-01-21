@@ -1,0 +1,56 @@
+﻿@model WebAppTodo.Models.Todo.TodoViewModel
+
+@{
+    string countdown = "";
+    string showdate = null;
+
+
+    if(!Model.IsCompleted && Model.DateDue != null)
+    {
+        showdate = Model.DateDue.GetValueOrDefault().Date.ToString("D");
+        var temp = ((DateTime)Model.DateDue - DateTime.UtcNow).Days;
+        if (temp >= 0)
+        {
+            countdown = $"(Za {temp} dana!)";
+        }
+        else
+        {
+            countdown = $"(Završio prije {temp} dana!)";
+        }
+    }
+    else if(Model.IsCompleted)
+    {
+        showdate = Model.Date_show.GetValueOrDefault().Date.ToString("D");
+    }
+
+}
+
+<div>
+    <b>@Model.Text</b> <span class="text-danger">@countdown</span><br />
+
+    @if (showdate != null)
+    {
+        @showdate<br />
+    }
+
+    @{
+        if (Model.TodoItemLabels != null && Model.TodoItemLabels.Count > 0)
+        {
+            <span>Labels: &nbsp;</span>
+            foreach (var label in @Model.TodoItemLabels)
+            {
+                <span>@label.Value &nbsp;</span>
+            }
+            <br />
+        }
+    }
+
+    @if (Model.IsCompleted)
+    {
+        <a asp-controller="Todo" asp-action="RemoveFromCompleted" asp-route-guid="@Model.Id"> Remove from completed</a>
+    }
+    else if(!Model.IsCompleted)
+    {
+        <a asp-controller="Todo" asp-action="MarkAsCompleted" asp-route-guid="@Model.Id"> Mark as completed</a>
+    }
+</div>

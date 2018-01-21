@@ -14,7 +14,7 @@ namespace WebAppTodo.Models.Todo
         [Display(Name = "Date due")]
         public DateTime? DateDue { get; set; }
 
-        [Display(Name = "Labels - seperated by comma!")]
+        [Display(Name = "Labels (seperated by comma)")]
         public string Labels { get; set; }
     }
 }

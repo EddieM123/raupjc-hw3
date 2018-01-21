@@ -90,6 +90,8 @@ namespace WebAppTodo.Core
             UserId = userId;
             Labels = new List<TodoItemLabel>();
         }
+
+
         public TodoItem()
         {
             // entity framework needs this one

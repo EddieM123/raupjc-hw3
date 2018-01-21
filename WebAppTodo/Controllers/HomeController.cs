@@ -11,11 +11,12 @@ namespace WebAppTodo.Controllers
 {
     public class HomeController : Controller
     {
+
         
 
         public IActionResult Index()
         {
-             return RedirectToAction("Index", "Todo");
+            return View();
         }
 
         public IActionResult About()

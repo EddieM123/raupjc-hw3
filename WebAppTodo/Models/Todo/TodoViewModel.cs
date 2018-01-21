@@ -11,7 +11,8 @@ namespace WebAppTodo.Models.Todo
         public Guid Id { get; set; }
         public string Text { get; set; }
         public DateTime? DateDue { get; set; }
-        public List<string> TodoItemLabels { get; set; }
+        public DateTime? Date_show { get; set; }
+        public List<TodoItemLabel> TodoItemLabels { get; set; }
         public bool IsCompleted { get; set; }
 
         public TodoViewModel(TodoItem todoItem)
@@ -19,7 +20,17 @@ namespace WebAppTodo.Models.Todo
             Id = todoItem.Id;
             Text = todoItem.Text;
             DateDue = todoItem.DateDue;
-            TodoItemLabels = todoItem.Labels.Select(s => s.Value).ToList();
+
+            if(todoItem.DateCompleted is null)
+            {
+                Date_show = todoItem.DateDue;
+            }
+            else
+            {
+                Date_show = todoItem.DateCompleted;
+            }
+
+            TodoItemLabels = todoItem.Labels;
             IsCompleted = todoItem.IsCompleted;
         }
 
