@@ -9,12 +9,16 @@
     {
         showdate = Model.DateDue.GetValueOrDefault().Date.ToString("D");
         var temp = ((DateTime)Model.DateDue - DateTime.UtcNow).Days;
-        if (temp >= 0)
+        if (temp > 0)
         {
             countdown = $"(Za {temp} dana!)";
         }
-        else
+        else if(temp == 0)
         {
+            countdown = $"(Danas!)";
+
+        }
+        else {
             countdown = $"(Završio prije {temp} dana!)";
         }
     }
