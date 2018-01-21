@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -66,8 +65,8 @@ namespace WebAppTodo.Controllers
         {
             if (ModelState.IsValid)
             {
-                TodoItem newTodo = new TodoItem(model.Text, await GetUserId());
-                newTodo.DateDue = model.DateDue;
+                TodoItem newItem = new TodoItem(model.Text, await GetUserId());
+                newItem.DateDue = model.DateDue;
 
                 if (!string.IsNullOrEmpty(model.Labels))
                 {
@@ -81,13 +80,13 @@ namespace WebAppTodo.Controllers
 
                         var newlbl = new TodoItemLabel(label);
                         var lbl = _repository.LabelExists(newlbl);
-                        if (!newTodo.Labels.Contains(lbl))
+                        if (!newItem.Labels.Contains(lbl))
                         {
-                            newTodo.Labels.Add(lbl);
+                            newItem.Labels.Add(lbl);
                         }
                     }
                 }
-                _repository.Add(newTodo);
+                _repository.Add(newItem);
                 return RedirectToAction("Index");
             }
             return View("Add");
@@ -103,8 +102,10 @@ namespace WebAppTodo.Controllers
         public async Task<IActionResult> RemoveFromCompleted(Guid guid)
         {
             var todo = _repository.Get(guid, await GetUserId());
+
             todo.DateCompleted = null;  
             _repository.Update(todo, await GetUserId());
+
             return RedirectToAction("Completed");
         }
 

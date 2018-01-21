@@ -26,7 +26,7 @@
 }
 
 <div>
-    <b>@Model.Text</b> <span class="text-danger">@countdown</span><br />
+    <b>@Model.Text</b><span class="text-danger">@countdown</span><br />
 
     @if (showdate != null)
     {
@@ -47,10 +47,10 @@
 
     @if (Model.IsCompleted)
     {
-        <a asp-controller="Todo" asp-action="RemoveFromCompleted" asp-route-guid="@Model.Id"> Remove from completed</a>
+        <a asp-controller="Todo" asp-action="RemoveFromCompleted" asp-route-guid="@Model.Id">Remove from completed</a>
     }
     else if(!Model.IsCompleted)
     {
-        <a asp-controller="Todo" asp-action="MarkAsCompleted" asp-route-guid="@Model.Id"> Mark as completed</a>
+        <a asp-controller="Todo" asp-action="MarkAsCompleted" asp-route-guid="@Model.Id">Mark as completed</a>
     }
 </div>
